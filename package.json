@@ -1,0 +1,23 @@
+{
+  "name": "budget-manager",
+  "workspaces": [
+    "./packages/frontend",
+    "./packages/backend"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/saranchonkau/budget-manager.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/saranchonkau/budget-manager/issues"
+  },
+  "homepage": "https://github.com/saranchonkau/budget-manager#readme",
+  "devDependencies": {
+    "prettier": "^2.4.1"
+  }
+}

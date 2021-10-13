@@ -1,0 +1,32 @@
+{
+  "name": "budget-manager",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/saranchonkau/budget-manager.git"
+  },
+  "author": "Ivan Saranchonkau (https://github.com/saranchonkau)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/saranchonkau/budget-manager/issues"
+  },
+  "homepage": "https://github.com/saranchonkau/budget-manager#readme",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "serve": "vite preview"
+  },
+  "dependencies": {
+    "react": "17.0.2",
+    "react-dom": "17.0.2"
+  },
+  "devDependencies": {
+    "@types/react": "17.0.27",
+    "@types/react-dom": "17.0.9",
+    "@vitejs/plugin-react": "1.0.2",
+    "typescript": "4.4.3",
+    "vite": "2.6.5"
+  }
+}
