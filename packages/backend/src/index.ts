@@ -1,6 +1,8 @@
 import { createServer, IncomingMessage, ServerResponse } from "http";
 import * as pc from "picocolors";
+import knexConfig from "./knexfile.js";
 
+console.log(Object.keys(knexConfig));
 function handleRequest(req: IncomingMessage, res: ServerResponse) {
   res.write("Server is ok");
   res.end();

@@ -1,9 +1,6 @@
 {
   "name": "budget-manager",
-  "workspaces": [
-    "./packages/frontend",
-    "./packages/backend"
-  ],
+  "workspaces": ["packages/*"],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

@@ -1,7 +1,5 @@
 {
-  "include": [
-    "src", "scripts/checker.js"
-  ],
+  "include": ["src", "src/knexfile.ts"],
   "compilerOptions": {
     "strict": true,
     "alwaysStrict": true,
@@ -19,8 +17,12 @@
     "noImplicitReturns": true,
     "noPropertyAccessFromIndexSignature": true,
     "noUnusedLocals": true,
-    "lib": ["ESNext"],
+    "lib": ["ES2020"],
     "skipLibCheck": true,
-    "allowJs": true
+    "allowJs": true,
+    "module": "ES2020",
+    "target": "ES2020",
+    "moduleResolution": "Node",
+    "allowSyntheticDefaultImports": true
   }
 }

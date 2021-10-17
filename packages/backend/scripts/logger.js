@@ -1,6 +1,6 @@
 const isDebug = process.argv[2] === "--debug";
 
-const logger = {
+export const logger = {
   logLevel: isDebug ? "debug" : "info",
   log(...args) {
     console.log(...args);
@@ -10,5 +10,3 @@ const logger = {
     console.log(...args);
   },
 };
-
-exports.logger = logger;

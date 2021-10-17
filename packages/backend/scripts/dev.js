@@ -1,7 +1,7 @@
-const pc = require("picocolors");
-const { app } = require("./app");
-const { runTypechecking } = require("./typecheck");
-const { logger } = require("./logger");
+import pc from "picocolors";
+import { runTypechecking } from "./typecheck.js";
+import { logger } from "./logger.js";
+import { app } from "./app.js";
 
 const tsProcess = runTypechecking();
 
@@ -35,5 +35,5 @@ process.on("SIGTERM", handleProcessEvent);
 process.on("exit", () => {
   app.stop();
   tsProcess.kill();
-  logger.log(pc.red("Dev server exit"));
+  logger.log(pc.red("[builder] exiting..."));
 });

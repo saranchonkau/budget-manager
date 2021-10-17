@@ -1,10 +1,13 @@
-const esbuild = require("esbuild");
-const path = require("path");
-const pc = require("picocolors");
-const { fork } = require("child_process");
-const { rm } = require("fs/promises");
-const chokidar = require("chokidar");
-const { logger } = require("./logger");
+import esbuild from "esbuild";
+import * as path from "path";
+import { fileURLToPath } from "url";
+import pc from "picocolors";
+import { fork } from "child_process";
+import { rm } from "fs/promises";
+import chokidar from "chokidar";
+import { logger } from "./logger.js";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const APP_DIRECTORY = "src";
 const APP_ENTRY_POINT = path.join(APP_DIRECTORY, "index.ts");
@@ -33,7 +36,7 @@ class App {
         entryPoints: [APP_ENTRY_POINT],
         bundle: true,
         outfile: APP_BUILD_FILE,
-        target: "node14.15",
+        target: "node16",
         platform: "node",
         logLevel: "debug",
         incremental: !isProduction,
@@ -72,6 +75,4 @@ class App {
   }
 }
 
-const app = new App();
-
-module.exports = { app };
+export const app = new App();

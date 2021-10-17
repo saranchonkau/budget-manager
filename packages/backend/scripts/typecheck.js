@@ -1,8 +1,8 @@
-const { spawn } = require("child_process");
-const chalk = require("chalk");
-const { logger } = require("./logger");
+import { spawn } from "child_process";
+import pc from "picocolors";
+import { logger } from "./logger.js";
 
-function runTypechecking() {
+export function runTypechecking() {
   const child = spawn("tsc", ["--watch", "--incremental", "--noEmit"], {
     stdio: "pipe",
   });
@@ -19,7 +19,7 @@ function runTypechecking() {
     }
 
     if (str.includes("error TS")) {
-      logger.log(chalk.redBright(str));
+      logger.log(pc.red(str));
     } else {
       if (logger.logLevel === "info") {
         if (str.includes("Starting compilation in watch mode")) return;
@@ -27,7 +27,7 @@ function runTypechecking() {
         if (str.includes("File change detected")) return;
       }
 
-      logger.log(chalk.cyan(str));
+      logger.log(pc.cyan(str));
     }
   }
 
@@ -37,7 +37,3 @@ function runTypechecking() {
 
   return child;
 }
-
-module.exports = {
-  runTypechecking,
-};

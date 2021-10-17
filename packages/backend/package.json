@@ -6,8 +6,11 @@
   "scripts": {
     "dev": "node scripts/dev.js",
     "prod": "node scripts/start.js",
-    "build": "concurrently \"tsc --noEmit\" \"node scripts/build.js\""
+    "build-knex-file": "tsc --project tsconfig.knex.json",
+    "build": "concurrently --kill-others-on-fail true \"tsc --noEmit\" \"npm run build-knex-file\" \"node scripts/build.js\"",
+    "migrate:latest": ""
   },
+  "type": "commonjs",
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -19,7 +22,8 @@
     "@types/node": "16.x",
     "chokidar": "^3.5.2",
     "concurrently": "^6.3.0",
-    "esbuild": "^0.13.5",
-    "typescript": "^4.4.4"
+    "esbuild": "0.13.7",
+    "prettier": "2.4.1",
+    "typescript": "4.5.0-dev.20211016"
   }
 }
