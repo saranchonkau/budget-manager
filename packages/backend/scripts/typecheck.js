@@ -1,8 +1,8 @@
-import { spawn } from "child_process";
-import pc from "picocolors";
-import { logger } from "./logger.js";
+const { spawn } = require("node:child_process");
+const pc = require("picocolors");
+const { logger } = require("./logger.js");
 
-export function runTypechecking() {
+function runTypechecking() {
   const child = spawn("tsc", ["--watch", "--incremental", "--noEmit"], {
     stdio: "pipe",
   });
@@ -37,3 +37,5 @@ export function runTypechecking() {
 
   return child;
 }
+
+module.exports = { runTypechecking };

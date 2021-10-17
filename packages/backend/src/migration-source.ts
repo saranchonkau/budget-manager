@@ -1,9 +1,9 @@
+import { readdir, readFile } from "node:fs/promises";
+import { fileURLToPath } from "node:url";
+import * as path from "node:path";
 import { Knex } from "knex";
-import { migrationsDirPath } from "./knexfile.js";
-import { readdir, readFile } from "fs/promises";
-import { sep } from "path";
-import { fileURLToPath } from "url";
-import * as path from "path";
+
+export const migrationsDirPath = path.resolve(__dirname, "../db/migrations");
 
 interface MigrationSpec {
   date: Date;
@@ -19,8 +19,7 @@ function parseDirName(dirname: string): { date: Date; name: string } {
   const hour = dirname.slice(8, 10);
   const minute = dirname.slice(10, 12);
   const second = dirname.slice(12, 14);
-  const millisecond = dirname.slice(14, 17);
-  const isoDate = `${year}-${month}-${day}T${hour}:${minute}:${second}.${millisecond}Z`;
+  const isoDate = `${year}-${month}-${day}T${hour}:${minute}:${second}.000Z`;
 
   return { date: new Date(isoDate), name: dirname.slice(18) };
 }
@@ -51,8 +50,8 @@ export class SqlMigrationSource implements Knex.MigrationSource<MigrationSpec> {
       .filter((dirent) => dirent.isDirectory())
       .map((dirent) => ({
         ...parseDirName(dirent.name),
-        up: { path: dirent.name + sep + "up.sql" },
-        down: { path: dirent.name + sep + "down.sql" },
+        up: { path: dirent.name + path.sep + "up.sql" },
+        down: { path: dirent.name + path.sep + "down.sql" },
       }));
   }
 }

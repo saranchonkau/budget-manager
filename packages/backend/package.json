@@ -6,9 +6,9 @@
   "scripts": {
     "dev": "node scripts/dev.js",
     "prod": "node scripts/start.js",
-    "build-knex-file": "tsc --project tsconfig.knex.json",
     "build": "concurrently --kill-others-on-fail true \"tsc --noEmit\" \"npm run build-knex-file\" \"node scripts/build.js\"",
-    "migrate:latest": ""
+    "migrate:latest": "knex --knexfile=./dist/knexfile.js migrate:latest",
+    "migrate:make": "node scripts/create-migration.js"
   },
   "type": "commonjs",
   "author": "",

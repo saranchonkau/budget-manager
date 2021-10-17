@@ -1,20 +1,9 @@
 import { Knex } from "knex";
-import PgConnectionConfig = Knex.PgConnectionConfig;
-import Config = Knex.Config;
-import { URL } from "url";
-import MigratorConfig = Knex.MigratorConfig;
 import { SqlMigrationSource } from "./migration-source.js";
 
-const migrationsDirRelativePath = "../db/migrations";
-
-export const migrationsDirPath = new URL(
-  migrationsDirRelativePath,
-  import.meta.url
-);
-
-interface AppKnexEnvConfig extends Config {
+interface AppKnexEnvConfig extends Knex.Config {
   client: "pg";
-  connection: PgConnectionConfig;
+  connection: Knex.PgConnectionConfig;
 }
 
 interface KnexConfig {
@@ -24,7 +13,7 @@ interface KnexConfig {
 
 const migrationSource = new SqlMigrationSource();
 
-const migrationsConfig: MigratorConfig = {
+const migrationsConfig: Knex.MigratorConfig = {
   migrationSource: migrationSource,
 };
 

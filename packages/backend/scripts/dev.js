@@ -1,7 +1,7 @@
-import pc from "picocolors";
-import { runTypechecking } from "./typecheck.js";
-import { logger } from "./logger.js";
-import { app } from "./app.js";
+const pc = require("picocolors");
+const { runTypechecking } = require("./typecheck.js");
+const { logger } = require("./logger.js");
+const { app } = require("./app.js");
 
 const tsProcess = runTypechecking();
 

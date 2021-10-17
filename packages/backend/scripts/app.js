@@ -1,19 +1,17 @@
-import esbuild from "esbuild";
-import * as path from "path";
-import { fileURLToPath } from "url";
-import pc from "picocolors";
-import { fork } from "child_process";
-import { rm } from "fs/promises";
-import chokidar from "chokidar";
-import { logger } from "./logger.js";
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const path = require("node:path");
+const { fork } = require("node:child_process");
+const { rm } = require("node:fs/promises");
+const esbuild = require("esbuild");
+const pc = require("picocolors");
+const chokidar = require("chokidar");
+const { logger } = require("./logger.js");
 
 const APP_DIRECTORY = "src";
 const APP_ENTRY_POINT = path.join(APP_DIRECTORY, "index.ts");
+const KNEX_FILE = path.join(APP_DIRECTORY, "knexfile.ts");
 const BUILD_DIRECTORY = "dist";
 const BUILD_DIRECTORY_PATH = path.resolve(__dirname, "..", BUILD_DIRECTORY);
-const APP_BUILD_FILE = path.join(BUILD_DIRECTORY, "server.js");
+const APP_BUILD_FILE = path.join(BUILD_DIRECTORY, "index.js");
 
 class App {
   constructor() {
@@ -33,12 +31,13 @@ class App {
 
     return esbuild
       .build({
-        entryPoints: [APP_ENTRY_POINT],
+        entryPoints: [APP_ENTRY_POINT, KNEX_FILE],
         bundle: true,
-        outfile: APP_BUILD_FILE,
+        outdir: BUILD_DIRECTORY_PATH,
         target: "node16",
         platform: "node",
         logLevel: "debug",
+        format: "cjs",
         incremental: !isProduction,
       })
       .then((buildResult) => {
@@ -75,4 +74,6 @@ class App {
   }
 }
 
-export const app = new App();
+const app = new App();
+
+module.exports = { app };
