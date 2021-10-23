@@ -1,5 +1,5 @@
 {
-  "include": ["src", "src/knexfile.ts"],
+  "include": ["src", "global.d.ts"],
   "compilerOptions": {
     "strict": true,
     "alwaysStrict": true,

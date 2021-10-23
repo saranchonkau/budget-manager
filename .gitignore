@@ -3,6 +3,7 @@ node_modules
 dist
 dist-ssr
 *.local
+.env
 .idea
 packages/backend/db/data
 *.tsbuildinfo

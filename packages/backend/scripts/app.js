@@ -8,7 +8,8 @@ const { logger } = require("./logger.js");
 
 const APP_DIRECTORY = "src";
 const APP_ENTRY_POINT = path.join(APP_DIRECTORY, "index.ts");
-const KNEX_FILE = path.join(APP_DIRECTORY, "knexfile.ts");
+const KNEX_FILE = path.resolve(APP_DIRECTORY, "./knex/knexfile.ts");
+const RUN_SEEDS_SCRIPT = path.join(APP_DIRECTORY, "./knex/run-seeds.ts");
 const BUILD_DIRECTORY = "dist";
 const BUILD_DIRECTORY_PATH = path.resolve(__dirname, "..", BUILD_DIRECTORY);
 const APP_BUILD_FILE = path.join(BUILD_DIRECTORY, "index.js");
@@ -31,7 +32,11 @@ class App {
 
     return esbuild
       .build({
-        entryPoints: [APP_ENTRY_POINT, KNEX_FILE],
+        entryPoints: {
+          index: APP_ENTRY_POINT,
+          knexfile: KNEX_FILE,
+          "run-seeds": RUN_SEEDS_SCRIPT,
+        },
         bundle: true,
         outdir: BUILD_DIRECTORY_PATH,
         target: "node16",
@@ -39,16 +44,13 @@ class App {
         logLevel: "debug",
         format: "cjs",
         incremental: !isProduction,
+        external: ["knex"],
       })
       .then((buildResult) => {
         const end = process.hrtime.bigint();
         logger.debug(pc.cyan(`Build took ${(end - start) / 1000_0000n}ms`));
 
         return buildResult;
-      })
-      .catch(() => {
-        this.stop();
-        process.exit(1);
       });
   }
 

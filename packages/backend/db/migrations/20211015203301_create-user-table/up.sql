@@ -1,8 +1,6 @@
--- Table: public.user
-
 CREATE TABLE "user"
 (
-    id smallserial NOT NULL,
+    id smallint NOT NULL GENERATED ALWAYS AS IDENTITY,
     email character varying(30) NOT NULL,
     password_hash character(60) NOT NULL,
     name character varying(30) NOT NULL,

@@ -6,19 +6,27 @@
   "scripts": {
     "dev": "node scripts/dev.js",
     "prod": "node scripts/start.js",
-    "build": "concurrently --kill-others-on-fail true \"tsc --noEmit\" \"npm run build-knex-file\" \"node scripts/build.js\"",
-    "migrate:latest": "knex --knexfile=./dist/knexfile.js migrate:latest",
-    "migrate:make": "node scripts/create-migration.js"
+    "build-js": "node scripts/build.js",
+    "build": "concurrently --kill-others-on-fail true \"tsc --noEmit\" \"yarn run build-js\"",
+    "migrate:latest": "yarn run build-js && knex --knexfile=./dist/knexfile.js migrate:latest",
+    "migrate:make": "node scripts/create-migration.js",
+    "seed:run": "yarn run build-js && node ./dist/run-seeds.js"
   },
   "type": "commonjs",
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.0.1",
+    "dotenv": "^10.0.0",
+    "get-stream": "^6.0.1",
+    "http-errors": "^1.8.0",
+    "jsonwebtoken": "^8.5.1",
     "knex": "^0.95.11",
     "pg": "^8.7.1",
     "picocolors": "^1.0.0"
   },
   "devDependencies": {
+    "@types/http-errors": "^1.8.1",
     "@types/node": "16.x",
     "chokidar": "^3.5.2",
     "concurrently": "^6.3.0",

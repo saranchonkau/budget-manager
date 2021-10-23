@@ -1,5 +1,4 @@
 import { readdir, readFile } from "node:fs/promises";
-import { fileURLToPath } from "node:url";
 import * as path from "node:path";
 import { Knex } from "knex";
 
@@ -21,11 +20,11 @@ function parseDirName(dirname: string): { date: Date; name: string } {
   const second = dirname.slice(12, 14);
   const isoDate = `${year}-${month}-${day}T${hour}:${minute}:${second}.000Z`;
 
-  return { date: new Date(isoDate), name: dirname.slice(18) };
+  return { date: new Date(isoDate), name: dirname.slice(15) };
 }
 
-async function execSqlFile(knex: Knex, file: string) {
-  const absolutePath = path.join(fileURLToPath(migrationsDirPath), file);
+async function execSqlFromMigrationFile(knex: Knex, file: string) {
+  const absolutePath = path.join(migrationsDirPath, file);
   const sqlBuffer = await readFile(absolutePath);
   return knex.raw(sqlBuffer.toString());
 }
@@ -33,8 +32,8 @@ async function execSqlFile(knex: Knex, file: string) {
 export class SqlMigrationSource implements Knex.MigrationSource<MigrationSpec> {
   getMigration(migration: MigrationSpec): Knex.Migration {
     return {
-      up: (knex) => execSqlFile(knex, migration.up.path),
-      down: (knex) => execSqlFile(knex, migration.down.path),
+      up: (knex) => execSqlFromMigrationFile(knex, migration.up.path),
+      down: (knex) => execSqlFromMigrationFile(knex, migration.down.path),
     };
   }
 
