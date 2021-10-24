@@ -1,19 +1,20 @@
-const pc = require("picocolors");
-const { runTypechecking } = require("./typecheck.js");
-const { logger } = require("./logger.js");
-const { app } = require("./app.js");
+import pc from "picocolors";
+import { runTypechecking } from "./typecheck.js";
+import { logger } from "./logger.js";
+import { app } from "./app.js";
+import { BuildIncremental } from "esbuild";
 
 const tsProcess = runTypechecking();
 
 let buildStatus = "idle";
-let bundle = null;
+let bundle: BuildIncremental | null = null;
 let isRebuildExpected = false;
 
 function buildApp() {
   buildStatus = "building";
 
   return app
-    .build()
+    .build<BuildIncremental>()
     .then((buildResult) => {
       buildStatus = "success";
 

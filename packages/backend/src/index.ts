@@ -1,32 +1,26 @@
 import { createServer, IncomingMessage, ServerResponse } from "node:http";
 import * as pc from "picocolors";
 import { isHttpError, NotFound } from "http-errors";
+
 import environment from "./environment.js";
-import { AppRequest } from "./AppRequest.js";
-import { userRepository } from "./modules/user/repository.js";
+import { Router } from "./router.js";
+import { authController } from "./modules/auth/controller.js";
 
 environment.init();
 
+const router = new Router();
+
+router.post("/auth/signup", authController.signUp);
+
 async function handleRequest(req: IncomingMessage, res: ServerResponse) {
   try {
-    const appRequest = new AppRequest(req, res);
-    await appRequest.init();
+    const foundRoute = router.find(req);
 
-    if (
-      appRequest.url.pathname === "/auth/signup" &&
-      appRequest.method === "POST"
-    ) {
-      const result = await userRepository.create({
-        email: "john.doe4@gmail.com",
-        password_hash: "some password hash",
-        name: "John doe",
-      });
-      console.log("result", result);
-      appRequest.respond(200, "User have been created");
-      return;
+    if (foundRoute) {
+      await foundRoute.handler(req, res, {}, {});
+    } else {
+      throw new NotFound();
     }
-
-    throw new NotFound();
   } catch (error) {
     console.error(error);
 

@@ -7,3 +7,4 @@ dist-ssr
 .idea
 packages/backend/db/data
 *.tsbuildinfo
+.tmp

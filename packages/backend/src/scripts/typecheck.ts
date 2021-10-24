@@ -1,13 +1,13 @@
-const { spawn } = require("node:child_process");
-const pc = require("picocolors");
-const { logger } = require("./logger.js");
+import { spawn } from "node:child_process";
+import pc from "picocolors";
+import { logger } from "./logger.js";
 
-function runTypechecking() {
+export function runTypechecking() {
   const child = spawn("tsc", ["--watch", "--incremental", "--noEmit"], {
     stdio: "pipe",
   });
 
-  function handleTsMessage(data) {
+  function handleTsMessage(data: Buffer) {
     let str = data.toString();
 
     if (str.endsWith("\n")) {
@@ -37,5 +37,3 @@ function runTypechecking() {
 
   return child;
 }
-
-module.exports = { runTypechecking };

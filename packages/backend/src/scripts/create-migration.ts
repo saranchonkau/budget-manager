@@ -1,6 +1,7 @@
-const fs = require("fs");
-const path = require("path");
-const pc = require("picocolors");
+import fs from "fs";
+import path from "path";
+import pc from "picocolors";
+
 const migrationName = process.argv[2];
 
 if (!migrationName) {
@@ -8,7 +9,7 @@ if (!migrationName) {
   process.exit(1);
 }
 
-function normalizeNumber(num) {
+function normalizeNumber(num: number) {
   if (num >= 0 && num < 10) {
     return "0" + String(num);
   }

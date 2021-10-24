@@ -1,6 +1,6 @@
 import path from "node:path";
 import { readFile } from "node:fs/promises";
-import knex from "./knex-instance.js";
+import knex from "../knex/knex-instance.js";
 
 const seedsDirPath = path.resolve(__dirname, "../db/seeds");
 

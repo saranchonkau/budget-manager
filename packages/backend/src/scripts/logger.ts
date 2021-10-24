@@ -1,14 +1,12 @@
 const isDebug = process.argv[2] === "--debug";
 
-const logger = {
+export const logger = {
   logLevel: isDebug ? "debug" : "info",
-  log(...args) {
+  log(...args: any[]) {
     console.log(...args);
   },
-  debug(...args) {
+  debug(...args: any[]) {
     if (!isDebug) return;
     console.log(...args);
   },
 };
-
-module.exports = { logger };
