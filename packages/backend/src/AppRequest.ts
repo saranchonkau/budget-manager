@@ -5,12 +5,16 @@ import { URL } from "node:url";
 import { OutgoingHttpHeaders } from "http";
 
 export class AppRequest {
-  public body: unknown;
+  private body: unknown;
 
   constructor(
     private readonly req: IncomingMessage,
     private readonly res: ServerResponse
   ) {}
+
+  public getBody<T>(): T {
+    return this.body as T;
+  }
 
   public get method(): string {
     const method = this.req.method;
@@ -58,11 +62,23 @@ export class AppRequest {
     }
   }
 
+  private applyCorsHeaders() {
+    this.res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+    this.res.setHeader("Access-Control-Allow-Credentials", "true");
+    this.res.setHeader(
+      "Access-Control-Allow-Methods",
+      "GET,HEAD,PUT,PATCH,POST,DELETE"
+    );
+    this.res.setHeader("Access-Control-Allow-Headers", "content-type");
+  }
+
   respond(
     statusCode: number,
-    body?: string,
+    body?: string | null,
     headers?: OutgoingHttpHeaders
   ): void {
+    this.applyCorsHeaders();
+
     this.res.writeHead(statusCode, headers);
 
     if (body) {

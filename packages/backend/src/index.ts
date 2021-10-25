@@ -10,7 +10,14 @@ environment.init();
 
 const router = new Router();
 
-router.post("/auth/signup", authController.signUp);
+router
+  .options("*", async (appRequest) => {
+    appRequest.respond(204, null, {
+      "Content-Length": "0",
+    });
+    console.log("respond OPTIONS!");
+  })
+  .post("/auth/signup", authController.signUp);
 
 async function handleRequest(req: IncomingMessage, res: ServerResponse) {
   try {

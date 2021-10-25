@@ -1,45 +1,79 @@
-import { useState } from 'react'
-import logo from './logo.svg'
-import './App.css'
+import { FormEvent, useState } from "react";
+import clsx from "clsx";
+import classes from "./App.module.css";
+import { request } from "./services/request";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  function handleSubmit(event: FormEvent) {
+    event.preventDefault();
+
+    request
+      .post({ path: "/auth/signup", body: { name, email, password } })
+      .then((response) => {
+        console.log("response: ", response);
+      });
+  }
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>Hello Vite + React!</p>
-        <p>
-          <button type="button" onClick={() => setCount((count) => count + 1)}>
-            count is: {count}
-          </button>
-        </p>
-        <p>
-          Edit <code>App.tsx</code> and save to test HMR updates.
-        </p>
-        <p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-          {' | '}
-          <a
-            className="App-link"
-            href="https://vitejs.dev/guide/features.html"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Vite Docs
-          </a>
-        </p>
-      </header>
+    <div className={classes.container}>
+      <form className={classes.form} onSubmit={handleSubmit}>
+        <h1 className={clsx(classes.title, "display-4", "fw-normal")}>
+          Sign up
+        </h1>
+
+        <div className="mb-3">
+          <label htmlFor="name" className="form-label">
+            Name
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            id="name"
+            placeholder="John Doe"
+            value={name}
+            onChange={(event) => setName(event.target.value)}
+          />
+        </div>
+
+        <div className="mb-3">
+          <label htmlFor="email" className="form-label">
+            Email
+          </label>
+          <input
+            type="email"
+            className="form-control"
+            id="email"
+            placeholder="john.doe@gmail.com"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+          />
+        </div>
+
+        <div className="mb-4">
+          <label htmlFor="email" className="form-label">
+            Password
+          </label>
+          <input
+            type="password"
+            className="form-control"
+            id="password"
+            placeholder="Password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+          />
+        </div>
+
+        <button type="submit" className="w-100 btn btn-lg btn-primary">
+          Submit
+        </button>
+      </form>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

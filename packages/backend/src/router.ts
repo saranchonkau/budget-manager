@@ -14,12 +14,14 @@ export class Router {
   public post: RequestHandler;
   public put: RequestHandler;
   public delete: RequestHandler;
+  public options: RequestHandler;
 
   constructor() {
     this.get = this.createHandler("GET");
     this.post = this.createHandler("POST");
     this.put = this.createHandler("PUT");
     this.delete = this.createHandler("DELETE");
+    this.options = this.createHandler("OPTIONS");
   }
 
   public find(req: IncomingMessage) {
