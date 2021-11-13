@@ -2,18 +2,46 @@ import { IncomingMessage, ServerResponse } from "node:http";
 import getStream from "get-stream";
 import createHttpError from "http-errors";
 import { URL } from "node:url";
-import { OutgoingHttpHeaders } from "http";
+import { OutgoingHttpHeaders } from "node:http";
+import * as t from "io-ts";
+import { Props } from "io-ts";
+import { isLeft } from "fp-ts/Either";
 
 export class AppRequest {
-  private body: unknown;
+  private body: Buffer;
 
   constructor(
     private readonly req: IncomingMessage,
     private readonly res: ServerResponse
-  ) {}
+  ) {
+    this.body = Buffer.from("");
+  }
 
-  public getBody<T>(): T {
-    return this.body as T;
+  public getJsonBody(): string {
+    return this.body.toString();
+  }
+
+  public parseJsonBody<P extends Props>(
+    contract: t.TypeC<P>
+  ): t.TypeOf<t.TypeC<P>> {
+    let parsedBody: unknown = null;
+
+    try {
+      parsedBody = JSON.parse(this.getJsonBody());
+    } catch (error) {
+      throw createHttpError(500, "Request body parsing failed");
+    }
+
+    const result = contract.decode(parsedBody);
+
+    if (isLeft(result)) {
+      throw createHttpError(
+        400,
+        "Request body doesn't fit contract: " + result.left.toString()
+      );
+    }
+
+    return result.right;
   }
 
   public get method(): string {
@@ -40,26 +68,8 @@ export class AppRequest {
     await this.initBody();
   }
 
-  private isBodyExpected(): boolean {
-    const methodsWithBody = ["POST", "PUT", "PATCH"];
-    const contentType = this.req.headers["content-type"] || "";
-
-    return (
-      methodsWithBody.includes(this.req.method || "") &&
-      contentType.includes("application/json")
-    );
-  }
-
   private async initBody() {
-    if (this.isBodyExpected()) {
-      const json = await getStream(this.req);
-      console.log("json: ", json);
-      try {
-        this.body = JSON.parse(json);
-      } catch (error) {
-        throw createHttpError(500, "Request body parsing failed");
-      }
-    }
+    this.body = await getStream.buffer(this.req);
   }
 
   private applyCorsHeaders() {

@@ -4,8 +4,9 @@ import { isHttpError, NotFound } from "http-errors";
 
 import environment from "./environment.js";
 import { Router } from "./router.js";
-import { authController } from "./modules/auth/controller.js";
+import { AuthController } from "./modules/auth/controller.js";
 
+const authController = new AuthController();
 environment.init();
 
 const router = new Router();
@@ -15,7 +16,6 @@ router
     appRequest.respond(204, null, {
       "Content-Length": "0",
     });
-    console.log("respond OPTIONS!");
   })
   .post("/auth/signup", authController.signUp);
 

@@ -1,6 +1,6 @@
 CREATE TABLE "user"
 (
-    id smallint NOT NULL GENERATED ALWAYS AS IDENTITY,
+    id uuid NOT NULL,
     email character varying(30) NOT NULL,
     password_hash character(60) NOT NULL,
     name character varying(30) NOT NULL,
