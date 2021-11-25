@@ -3,9 +3,30 @@ import getStream from "get-stream";
 import createHttpError from "http-errors";
 import { URL } from "node:url";
 import { OutgoingHttpHeaders } from "node:http";
-import * as t from "io-ts";
-import { Props } from "io-ts";
-import { isLeft } from "fp-ts/Either";
+import * as z from "zod";
+import { parseWithContract } from "./parse-with-contract";
+import { ErrorResponse, ResponseModel } from "@/shared/response";
+import { AppErrorBrand } from "@/shared/app-error-brands";
+import { AppError } from "@/shared/app-error";
+import { Either, left, right } from "@sweet-monads/either";
+
+export class InvalidRequestBodyError extends AppError<AppErrorBrand.InvalidRequestBody> {
+  constructor() {
+    super({
+      brand: AppErrorBrand.InvalidRequestBody,
+      message: `Invalid request body`,
+    });
+  }
+}
+
+export class RequestBodyDoesNotFitContractError extends AppError<AppErrorBrand.RequestBodyDoesNotFitContract> {
+  constructor() {
+    super({
+      brand: AppErrorBrand.RequestBodyDoesNotFitContract,
+      message: `Request body doesn't fit contract`,
+    });
+  }
+}
 
 export class AppRequest {
   private body: Buffer;
@@ -21,27 +42,27 @@ export class AppRequest {
     return this.body.toString();
   }
 
-  public parseJsonBody<P extends Props>(
-    contract: t.TypeC<P>
-  ): t.TypeOf<t.TypeC<P>> {
+  public parseJsonBody<T>(
+    contract: z.ZodType<T>
+  ): Either<
+    InvalidRequestBodyError | RequestBodyDoesNotFitContractError,
+    z.TypeOf<z.ZodType<T>>
+  > {
     let parsedBody: unknown = null;
 
     try {
       parsedBody = JSON.parse(this.getJsonBody());
     } catch (error) {
-      throw createHttpError(500, "Request body parsing failed");
+      return left(new InvalidRequestBodyError());
     }
 
-    const result = contract.decode(parsedBody);
+    const result = parseWithContract(contract, parsedBody);
 
-    if (isLeft(result)) {
-      throw createHttpError(
-        400,
-        "Request body doesn't fit contract: " + result.left.toString()
-      );
+    if (result.isLeft()) {
+      return left(new RequestBodyDoesNotFitContractError());
     }
 
-    return result.right;
+    return right(result.value);
   }
 
   public get method(): string {
@@ -80,6 +101,14 @@ export class AppRequest {
       "GET,HEAD,PUT,PATCH,POST,DELETE"
     );
     this.res.setHeader("Access-Control-Allow-Headers", "content-type");
+  }
+
+  sendError(statusCode: number, error: AppError<AppErrorBrand, unknown>) {
+    this.send(new ErrorResponse(statusCode, error));
+  }
+
+  send(response: ResponseModel) {
+    this.respond(response.statusCode, response.body);
   }
 
   respond(

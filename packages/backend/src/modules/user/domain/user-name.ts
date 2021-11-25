@@ -1,17 +1,33 @@
-import * as t from "io-ts";
-import { withMessage } from "io-ts-types/lib/withMessage";
+import * as z from "zod";
+import { ValueObject } from "../../../shared/value-object";
+import { parseWithContract } from "../../../shared/parse-with-contract";
 
-interface UserNameBrand {
-  readonly UserName: unique symbol;
+type UserNameType = string & { readonly _brand_: unique symbol };
+
+function isUserNameValid(name: string): name is UserNameType {
+  return name.trim().length > 0;
 }
 
-export const UserName = withMessage(
-  t.brand(
-    t.string,
-    (s: string): s is t.Branded<string, UserNameBrand> => s.length > 0,
-    "UserName"
-  ),
-  (input) => `User name value must be a non empty string, got: "${input}"`
-);
+export const UserNameContract = z.string().refine(isUserNameValid, (value) => ({
+  message: `User name value must be a non empty string, got: "${value}"`,
+}));
 
-export type UserNameType = t.TypeOf<typeof UserName>;
+interface UserNameProps {
+  value: UserNameType;
+}
+
+export class UserName extends ValueObject<UserNameProps> {
+  private constructor(props: UserNameProps) {
+    super(props);
+  }
+
+  public get value() {
+    return this.props.value;
+  }
+
+  public static from(value: string) {
+    return parseWithContract(UserNameContract, value).mapRight(
+      (value) => new UserName({ value })
+    );
+  }
+}

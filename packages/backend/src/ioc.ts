@@ -1,9 +1,18 @@
-// import { Container } from "@owja/ioc";
+import { createInjector } from "typed-inject";
+import { UserRepository } from "@/modules/user/user-repository";
+import { CreateUserUseCase } from "@/modules/user/use-cases/create-user/create-user-use-case";
+import { CreateUserController } from "@/modules/user/use-cases/create-user/create-user-controller";
+import { router } from "@/router";
 
-// const container = new Container();
+export enum InjectToken {
+  UserRepository = "UserRepository",
+  CreateUserUseCase = "CreateUserUseCase",
+  CreateUserController = "CreateUserController",
+  Router = "Router",
+}
 
-export const TYPE = {
-  AuthRepository: Symbol("AuthRepository"),
-} as const;
-
-// container.bind<MyServiceInterface>(TYPE.MyService).to(MyService);
+export const injector = createInjector()
+  .provideValue(InjectToken.Router, router)
+  .provideClass(InjectToken.UserRepository, UserRepository)
+  .provideClass(InjectToken.CreateUserUseCase, CreateUserUseCase)
+  .provideClass(InjectToken.CreateUserController, CreateUserController);

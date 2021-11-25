@@ -1,10 +1,10 @@
-import { UuidType } from "./uuid";
+import { Uuid } from "./uuid";
 
 export abstract class Entity<T> {
-  protected readonly _id: UuidType;
-  public readonly props: T;
+  protected readonly _id: Uuid;
+  protected readonly props: T;
 
-  protected constructor(props: T, id: UuidType) {
+  protected constructor(props: T, id: Uuid) {
     this._id = id;
     this.props = props;
   }

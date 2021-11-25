@@ -1,7 +1,8 @@
 import FindMyWay, { HTTPMethod } from "find-my-way";
 import { IncomingMessage, ServerResponse, METHODS } from "node:http";
 
-import { AppRequest } from "./AppRequest.js";
+import { AppRequest } from "@/shared/app-request";
+import { ModuleRouterConstructor } from "@/shared/module-router";
 
 interface RequestHandler {
   (pattern: string, handler: (appRequest: AppRequest) => Promise<void>): Router;
@@ -54,4 +55,11 @@ export class Router {
       return this;
     };
   }
+
+  useModuleRouter<R extends ModuleRouterConstructor>(ModuleRouter: R) {
+    const moduleRouter = new ModuleRouter();
+    moduleRouter.init(this);
+  }
 }
+
+export const router = new Router();

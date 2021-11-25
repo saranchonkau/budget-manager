@@ -1,42 +1,38 @@
 import { v4 as generateUuid, validate, version } from "uuid";
-import * as t from "io-ts";
-import { isLeft } from "fp-ts/Either";
-import { withMessage } from "io-ts-types/lib/withMessage";
+import * as z from "zod";
+import { parseWithContract } from "./parse-with-contract";
+import { ValueObject } from "./value-object";
 
-interface UuidBrand {
-  readonly Uuid: unique symbol;
-}
+type UuidType = string & { readonly _brand_: unique symbol };
 
-function uuidValidateV4(uuid: string): boolean {
+function isUuidV4(uuid: string): uuid is UuidType {
   return validate(uuid) && version(uuid) === 4;
 }
 
-export const UuidContract = withMessage(
-  t.brand(
-    t.string,
-    (value): value is t.Branded<string, UuidBrand> => uuidValidateV4(value),
-    "Uuid"
-  ),
-  (input, context) =>
-    `UUID must be a string value with format: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx', got: ${input}`
-);
+export const UuidContract = z.string().refine(isUuidV4, (value) => ({
+  message: `UUID must be a string value with format: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx', got: "${value}"`,
+}));
 
-export type UuidType = t.TypeOf<typeof UuidContract>;
+interface UuidProps {
+  value: UuidType;
+}
 
-export class Uuid {
-  private constructor(private readonly value: UuidType) {}
-
-  public toValue() {
-    return this.value;
+export class Uuid extends ValueObject<UuidProps> {
+  private constructor(props: UuidProps) {
+    super(props);
   }
 
-  public static create(uuid?: string) {
-    const parsedUuid = UuidContract.decode(uuid ?? generateUuid());
+  public get value() {
+    return this.props.value;
+  }
 
-    if (isLeft(parsedUuid)) {
-      throw new Error("Invalid UUID");
-    } else {
-      return new Uuid(parsedUuid.right);
-    }
+  public static create() {
+    return new Uuid({ value: generateUuid() as UuidType });
+  }
+
+  public static from(uuid: string) {
+    return parseWithContract(UuidContract, uuid).mapRight(
+      (value) => new Uuid({ value })
+    );
   }
 }

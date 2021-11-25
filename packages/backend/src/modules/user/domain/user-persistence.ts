@@ -1,7 +1,5 @@
-import { UuidType } from "../../../shared/uuid";
-
 export interface UserPersistence {
-  readonly id: UuidType;
+  readonly id: string;
   readonly email: string;
   readonly password_hash: string;
   readonly name: string;
