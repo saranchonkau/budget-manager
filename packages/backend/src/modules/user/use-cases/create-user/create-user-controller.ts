@@ -10,7 +10,8 @@ import {
 import { AppErrorBrand } from "@/shared/app-error-brands";
 import { Left } from "@/types/common";
 import { StatusCodes } from "http-status-codes";
-import { InjectToken } from "@/ioc";
+import { InjectToken } from "@/constants/injection-tokens";
+import { userMapper } from "@/modules/user/domain/user-mapper";
 
 export class CreateUserController implements BaseController {
   constructor(private useCase: CreateUserUseCase) {}
@@ -45,7 +46,7 @@ export class CreateUserController implements BaseController {
     return appRequest.send(
       new CommandResponse({
         message: "User successfully created",
-        data: result.value,
+        data: userMapper.toDTO(result.value),
       })
     );
   }

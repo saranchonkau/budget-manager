@@ -9,6 +9,9 @@ import { ErrorResponse, ResponseModel } from "@/shared/response";
 import { AppErrorBrand } from "@/shared/app-error-brands";
 import { AppError } from "@/shared/app-error";
 import { Either, left, right } from "@sweet-monads/either";
+import { convertZodIssuesToErrorObject } from "@/utils/convert-zod-error";
+import { ZodError } from "zod";
+import { UnknownObject } from "@/types/common";
 
 export class InvalidRequestBodyError extends AppError<AppErrorBrand.InvalidRequestBody> {
   constructor() {
@@ -19,11 +22,15 @@ export class InvalidRequestBodyError extends AppError<AppErrorBrand.InvalidReque
   }
 }
 
-export class RequestBodyDoesNotFitContractError extends AppError<AppErrorBrand.RequestBodyDoesNotFitContract> {
-  constructor() {
+export class RequestBodyDoesNotFitContractError extends AppError<
+  AppErrorBrand.RequestBodyDoesNotFitContract,
+  UnknownObject
+> {
+  constructor(zodError: ZodError) {
     super({
       brand: AppErrorBrand.RequestBodyDoesNotFitContract,
       message: `Request body doesn't fit contract`,
+      payload: convertZodIssuesToErrorObject(zodError),
     });
   }
 }
@@ -59,7 +66,7 @@ export class AppRequest {
     const result = parseWithContract(contract, parsedBody);
 
     if (result.isLeft()) {
-      return left(new RequestBodyDoesNotFitContractError());
+      return left(new RequestBodyDoesNotFitContractError(result.value));
     }
 
     return right(result.value);
@@ -108,7 +115,9 @@ export class AppRequest {
   }
 
   send(response: ResponseModel) {
-    this.respond(response.statusCode, response.body);
+    this.respond(response.statusCode, response.body, {
+      "content-type": "application/json",
+    });
   }
 
   respond(

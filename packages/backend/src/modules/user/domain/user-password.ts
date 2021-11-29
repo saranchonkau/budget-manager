@@ -54,10 +54,9 @@ class Salt extends ValueObject<SaltProps> {
  */
 type PasswordType = string & { readonly _brand_: unique symbol };
 
-const PASSWORD_REGEX = /[0-9A-Fa-f-_]{5,}/g;
-
 function isPasswordValid(value: string): value is PasswordType {
-  return PASSWORD_REGEX.test(value);
+  const regexp = new RegExp("[0-9A-Fa-f-_]{5,}", "g");
+  return regexp.test(value);
 }
 
 export const PasswordContract = z.string().refine(isPasswordValid, (value) => ({
@@ -107,11 +106,15 @@ export class InvalidPasswordHashError extends InternalServerError {
 type PasswordHashType = string & { readonly _brand_: unique symbol };
 type DerivedKeyType = string & { readonly _brand_: unique symbol };
 
-const PASSWORD_HASH_REGEX =
-  /^(?<salt>[0-9A-Fa-f]{32}):(?<derivedKey>[0-9A-Fa-f]{128})$/g;
+function getPasswordHashRegex(): RegExp {
+  return new RegExp(
+    "^(?<salt>[0-9A-Fa-f]{16}):(?<derivedKey>[0-9A-Fa-f]{128})$",
+    "g"
+  );
+}
 
 function isPasswordHashValid(value: string): value is PasswordHashType {
-  return PASSWORD_HASH_REGEX.test(value);
+  return getPasswordHashRegex().test(value);
 }
 
 export const PasswordHashContract = z
@@ -170,7 +173,7 @@ export class UserPasswordHash extends ValueObject<PasswordHashProps> {
   private static parsePasswordHash(
     passwordHash: PasswordHashType
   ): PasswordHashProps {
-    const execResult = PASSWORD_HASH_REGEX.exec(
+    const execResult = getPasswordHashRegex().exec(
       passwordHash
     ) as PasswordHashParseResult;
 

@@ -12,6 +12,7 @@ import { UserName } from "./user-name";
 
 class UserMapper implements Mapper<UserPersistence, User, UserDto> {
   toPersistence(user: User): UserPersistence {
+    console.log("user.password_hash.toString()", user.password_hash.toString());
     return {
       id: user.id,
       email: user.email,

@@ -26,7 +26,10 @@ export class RequestHandler {
       let statusCode = 500;
       let message = "Unknown error";
 
-      if (isHttpError(error)) {
+      if (error instanceof RouteNotFoundError) {
+        statusCode = 404;
+        message = "API endpoint is not found";
+      } else if (isHttpError(error)) {
         statusCode = error.statusCode;
         message = error.message;
       } else if (error instanceof Error) {

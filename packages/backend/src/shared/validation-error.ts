@@ -24,7 +24,7 @@ const brand = AppErrorBrand.ValidationError;
 
 export class ValidationError<
   I extends { [key in string]?: ZodError }
-> extends AppError<typeof brand, { [key in string]?: FieldValidationError }> {
+> extends AppError<typeof brand, { [key in string]?: string }> {
   constructor(options: { readonly message: string; readonly payload: I }) {
     super({
       brand,

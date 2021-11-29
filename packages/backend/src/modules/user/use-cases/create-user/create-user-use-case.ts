@@ -10,7 +10,7 @@ import { divideLeftAndRight } from "@/utils/resolve-validation-errors";
 import { ValidationError } from "@/shared/validation-error";
 import { ZodError } from "zod";
 import { UserRepositoryModel } from "@/modules/user/domain/user-repository-model";
-import { InjectToken } from "@/ioc";
+import { InjectToken } from "@/constants/injection-tokens";
 
 export type CreateUserUseCaseResponse = Either<
   | ValidationError<{

@@ -12,19 +12,31 @@ if (!scriptFileName) {
 
 const filePath = path.resolve(process.cwd(), scriptFileName);
 
+const APP_DIRECTORY_PATH = path.resolve(__dirname, "..", "src");
+const TSCONFIG_PATH = path.resolve(__dirname, "..", "tsconfig.json");
+
 const makeAllPackagesExternalPlugin = {
   name: "make-all-packages-external",
   setup(build) {
     let filter = /^[^.\/]|^\.[^.\/]|^\.\.[^\/]/; // Must not start with "/" or "./" or "../"
-    build.onResolve({ filter }, (args) => ({
-      path: args.path,
-      external: true,
-    }));
+    build.onResolve({ filter }, (args) => {
+      if (args.path.startsWith("@/")) {
+        return {
+          path: path.resolve(APP_DIRECTORY_PATH, args.path.slice(2) + ".ts"),
+        };
+      } else {
+        return {
+          path: args.path,
+          external: true,
+        };
+      }
+    });
   },
 };
 
-const basename = path.basename(scriptFileName);
-const outFile = path.join(__dirname, "../.tmp", basename);
+const ext = path.extname(scriptFileName);
+const basename = path.basename(scriptFileName).slice(0, -1 * ext.length);
+const outFile = path.join(__dirname, "../.tmp", basename + ".js");
 
 let scriptProcess = null;
 
@@ -37,9 +49,12 @@ esbuild
     target: "node16",
     platform: "node",
     format: "cjs",
+    tsconfig: TSCONFIG_PATH,
   })
   .then(() => {
-    scriptProcess = fork(outFile, { stdio: "inherit" });
+    scriptProcess = fork(outFile, process.argv.slice(3), {
+      stdio: "inherit",
+    });
   });
 
 function handleSignal() {

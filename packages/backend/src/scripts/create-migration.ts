@@ -1,6 +1,8 @@
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 import pc from "picocolors";
+
+console.log("process.argv", process.argv);
 
 const migrationName = process.argv[2];
 

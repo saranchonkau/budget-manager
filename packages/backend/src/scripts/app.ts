@@ -8,12 +8,13 @@ import chokidar from "chokidar";
 
 import { logger } from "./logger.js";
 
-const APP_DIRECTORY = "src";
-const APP_ENTRY_POINT = path.join(APP_DIRECTORY, "index.ts");
-const KNEX_FILE = path.resolve(APP_DIRECTORY, "./knex/knexfile.ts");
+const APP_DIRECTORY_PATH = path.resolve(__dirname, "..", "src");
+const APP_ENTRY_POINT = path.join(APP_DIRECTORY_PATH, "index.ts");
+const KNEX_FILE = path.resolve(APP_DIRECTORY_PATH, "./knex/knexfile.ts");
 const BUILD_DIRECTORY = "dist";
 const BUILD_DIRECTORY_PATH = path.resolve(__dirname, "..", BUILD_DIRECTORY);
 const APP_BUILD_FILE = path.join(BUILD_DIRECTORY, "index.js");
+const TSCONFIG_PATH = path.resolve(__dirname, "..", "tsconfig.json");
 
 class App {
   private appProcess: ChildProcess | null = null;
@@ -33,10 +34,21 @@ class App {
       name: "make-all-packages-external",
       setup(build) {
         let filter = /^[^.\/]|^\.[^.\/]|^\.\.[^\/]/; // Must not start with "/" or "./" or "../"
-        build.onResolve({ filter }, (args) => ({
-          path: args.path,
-          external: true,
-        }));
+        build.onResolve({ filter }, (args) => {
+          if (args.path.startsWith("@/")) {
+            return {
+              path: path.resolve(
+                APP_DIRECTORY_PATH,
+                args.path.slice(2) + ".ts"
+              ),
+            };
+          } else {
+            return {
+              path: args.path,
+              external: true,
+            };
+          }
+        });
       },
     };
 
@@ -54,6 +66,8 @@ class App {
         // logLevel: "debug",
         format: "cjs",
         incremental: !isProduction,
+        tsconfig: TSCONFIG_PATH,
+        absWorkingDir: BUILD_DIRECTORY_PATH,
       })
       .then((buildResult) => {
         const end = process.hrtime.bigint();
@@ -80,7 +94,7 @@ class App {
 
   onChange(changeHandler: () => void): void {
     chokidar
-      .watch(APP_DIRECTORY, { ignoreInitial: true })
+      .watch(APP_DIRECTORY_PATH, { ignoreInitial: true })
       .on("all", changeHandler);
   }
 }

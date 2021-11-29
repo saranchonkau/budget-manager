@@ -7,7 +7,7 @@ export class UserAlreadyExistsError extends AppError<typeof brand> {
   constructor(email: string) {
     super({
       brand,
-      message: `Account with such email "${email} is already exists`,
+      message: `Account with such email "${email}" is already exists`,
     });
   }
 }

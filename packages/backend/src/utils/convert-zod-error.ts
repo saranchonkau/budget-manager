@@ -1,5 +1,5 @@
 import { ZodError } from "zod";
-import { set } from "lodash-es";
+import set from "lodash/set";
 import { UnknownObject } from "@/types/common";
 
 export function convertZodIssuesToErrorObject(error: ZodError): UnknownObject {
