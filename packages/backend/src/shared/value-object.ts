@@ -1,5 +1,5 @@
-import { UnknownObject } from "../types/common";
-import { shallowEqual } from "../utils/shallow-equal";
+import { UnknownObject } from "@/types/common";
+import { shallowEqual } from "@/utils/shallow-equal";
 
 /**
  * @desc ValueObjects are objects that we determine their

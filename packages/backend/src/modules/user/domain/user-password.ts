@@ -3,7 +3,6 @@ import { Either } from "@sweet-monads/either";
 import { ValueObject } from "@/shared/value-object";
 import * as z from "zod";
 import { parseWithContract } from "@/shared/parse-with-contract";
-import { InternalServerError } from "http-errors";
 import { ZodError } from "zod";
 
 /**
@@ -89,7 +88,7 @@ export class UserPassword extends ValueObject<PasswordProps> {
  * Password as hash
  */
 
-export class InvalidPasswordError extends InternalServerError {
+export class InvalidPasswordError extends Error {
   constructor(error: Error) {
     super(
       `Invalid password. Password hash cannot be generated. Root cause: ${error.message}`
@@ -97,7 +96,7 @@ export class InvalidPasswordError extends InternalServerError {
   }
 }
 
-export class InvalidPasswordHashError extends InternalServerError {
+export class InvalidPasswordHashError extends Error {
   constructor(error: Error) {
     super(`Invalid password hash. Root cause: ${error.message}`);
   }

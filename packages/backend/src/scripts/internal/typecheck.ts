@@ -1,6 +1,6 @@
 import { spawn } from "node:child_process";
 import pc from "picocolors";
-import { logger } from "./logger.js";
+import { logger } from "./logger";
 
 export function runTypechecking() {
   const child = spawn("tsc", ["--watch", "--incremental", "--noEmit"], {

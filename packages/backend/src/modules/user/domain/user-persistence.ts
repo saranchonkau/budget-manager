@@ -3,7 +3,7 @@ export interface UserPersistence {
   readonly email: string;
   readonly password_hash: string;
   readonly name: string;
-  readonly created_at: string;
-  readonly updated_at: string;
-  readonly deleted_at: string;
+  readonly created_at: Date;
+  readonly updated_at: Date;
+  readonly deleted_at: Date;
 }

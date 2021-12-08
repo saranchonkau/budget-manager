@@ -3,9 +3,21 @@ import { IncomingMessage, ServerResponse, METHODS } from "node:http";
 
 import { AppRequest } from "@/shared/app-request";
 import { ModuleRouterConstructor } from "@/shared/module-router";
+import { Controller } from "@/shared/controller";
+import {
+  RequestFilter,
+  RequestFilterResult,
+} from "@/shared/base-request-filter";
 
 interface RequestHandler {
   (pattern: string, handler: (appRequest: AppRequest) => Promise<void>): Router;
+  (
+    pattern: string,
+    options: {
+      filters?: Array<RequestFilter>;
+      controller: Controller;
+    }
+  ): Router;
 }
 
 export class Router {
@@ -44,21 +56,41 @@ export class Router {
     await handler(appRequest);
   }
 
+  private async runFilters(
+    filters: Array<RequestFilter>,
+    appRequest: AppRequest
+  ): Promise<RequestFilterResult> {
+    for (let requestFilter of filters) {
+      const result = await requestFilter.filter(appRequest);
+      if (!result.isPassed) return result;
+    }
+
+    return { isPassed: true };
+  }
+
   private createHandler(method: HTTPMethod): RequestHandler {
-    return (
-      pattern: string,
-      handler: (appRequest: AppRequest) => Promise<void>
-    ): Router => {
+    return (pattern, handler): Router => {
       this.router.on(method, pattern, (req, res) =>
-        this.handleRequest(req, res, handler)
+        this.handleRequest(req, res, async (appRequest) => {
+          if (typeof handler === "function") {
+            await handler(appRequest);
+          } else {
+            const { controller, filters = [] } = handler;
+            const filterResult = await this.runFilters(filters, appRequest);
+            if (!filterResult.isPassed) return;
+
+            await controller.execute(appRequest);
+          }
+        })
       );
       return this;
     };
   }
 
-  useModuleRouter<R extends ModuleRouterConstructor>(ModuleRouter: R) {
+  useModuleRouter<R extends ModuleRouterConstructor>(ModuleRouter: R): Router {
     const moduleRouter = new ModuleRouter();
     moduleRouter.init(this);
+    return this;
   }
 }
 

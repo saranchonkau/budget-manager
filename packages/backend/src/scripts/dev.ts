@@ -1,8 +1,9 @@
 import pc from "picocolors";
-import { runTypechecking } from "./typecheck.js";
-import { logger } from "./logger.js";
-import { app } from "./app.js";
 import { BuildIncremental } from "esbuild";
+
+import { runTypechecking } from "./internal/typecheck";
+import { logger } from "./internal/logger";
+import { app } from "./internal/app";
 
 const tsProcess = runTypechecking();
 

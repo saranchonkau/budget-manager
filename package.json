@@ -1,7 +1,9 @@
 {
   "name": "budget-manager",
   "private": true,
-  "workspaces": ["packages/*"],
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -14,8 +16,5 @@
   "bugs": {
     "url": "https://github.com/saranchonkau/budget-manager/issues"
   },
-  "homepage": "https://github.com/saranchonkau/budget-manager#readme",
-  "devDependencies": {
-    "prettier": "^2.4.1"
-  }
+  "homepage": "https://github.com/saranchonkau/budget-manager#readme"
 }

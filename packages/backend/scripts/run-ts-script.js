@@ -1,7 +1,7 @@
 const esbuild = require("esbuild");
 const path = require("node:path");
 const pc = require("picocolors");
-const { fork } = require("node:child_process");
+const cp = require("node:child_process");
 
 const scriptFileName = process.argv[2];
 
@@ -10,27 +10,19 @@ if (!scriptFileName) {
   process.exit(1);
 }
 
-const filePath = path.resolve(process.cwd(), scriptFileName);
+const scriptPath = path.resolve(process.cwd(), scriptFileName);
 
-const APP_DIRECTORY_PATH = path.resolve(__dirname, "..", "src");
-const TSCONFIG_PATH = path.resolve(__dirname, "..", "tsconfig.json");
-
+/** Reference: {@link https://github.com/evanw/esbuild/issues/619#issuecomment-751995294} */
 const makeAllPackagesExternalPlugin = {
   name: "make-all-packages-external",
   setup(build) {
-    let filter = /^[^.\/]|^\.[^.\/]|^\.\.[^\/]/; // Must not start with "/" or "./" or "../"
-    build.onResolve({ filter }, (args) => {
-      if (args.path.startsWith("@/")) {
-        return {
-          path: path.resolve(APP_DIRECTORY_PATH, args.path.slice(2) + ".ts"),
-        };
-      } else {
-        return {
-          path: args.path,
-          external: true,
-        };
-      }
-    });
+    /** Must not start with "/" or "./" or "../" or "@/" */
+    const filter = /^[^.\/@]|^\.[^.\/]|^\.\.[^\/]|^@[^\/]/;
+
+    build.onResolve({ filter }, (args) => ({
+      path: args.path,
+      external: true,
+    }));
   },
 };
 
@@ -43,16 +35,16 @@ let scriptProcess = null;
 esbuild
   .build({
     plugins: [makeAllPackagesExternalPlugin],
-    entryPoints: [filePath],
+    entryPoints: [scriptPath],
     outfile: outFile,
     bundle: true,
     target: "node16",
     platform: "node",
     format: "cjs",
-    tsconfig: TSCONFIG_PATH,
+    tsconfig: path.resolve(__dirname, "..", "tsconfig.json"),
   })
   .then(() => {
-    scriptProcess = fork(outFile, process.argv.slice(3), {
+    scriptProcess = cp.fork(outFile, process.argv.slice(3), {
       stdio: "inherit",
     });
   });

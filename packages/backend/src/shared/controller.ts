@@ -1,5 +1,5 @@
 import { AppRequest } from "./app-request";
 
-export interface BaseController {
+export interface Controller {
   execute(appRequest: AppRequest): Promise<void>;
 }

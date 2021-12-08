@@ -1,6 +1,4 @@
 import { IncomingMessage, ServerResponse } from "node:http";
-import getStream from "get-stream";
-import createHttpError from "http-errors";
 import { URL } from "node:url";
 import { OutgoingHttpHeaders } from "node:http";
 import * as z from "zod";
@@ -45,6 +43,14 @@ export class AppRequest {
     this.body = Buffer.from("");
   }
 
+  public get isFinished(): boolean {
+    return this.res.writableEnded;
+  }
+
+  public get headers() {
+    return this.req.headers;
+  }
+
   public getJsonBody(): string {
     return this.body.toString();
   }
@@ -76,7 +82,7 @@ export class AppRequest {
     const method = this.req.method;
 
     if (!method) {
-      throw createHttpError(500, "Request method is empty");
+      throw new Error("Request method is empty");
     }
 
     return method;
@@ -86,7 +92,7 @@ export class AppRequest {
     const url = this.req.url;
 
     if (!url) {
-      throw createHttpError(500, "Request url is empty");
+      throw new Error("Request url is empty");
     }
 
     return new URL(url, "http://base");
@@ -97,7 +103,15 @@ export class AppRequest {
   }
 
   private async initBody() {
-    this.body = await getStream.buffer(this.req);
+    const buffers = [];
+
+    const requestStream: AsyncIterable<Buffer> = this.req;
+
+    for await (const chunk of requestStream) {
+      buffers.push(chunk);
+    }
+
+    this.body = Buffer.concat(buffers);
   }
 
   private applyCorsHeaders() {
@@ -125,6 +139,10 @@ export class AppRequest {
     body?: string | null,
     headers?: OutgoingHttpHeaders
   ): void {
+    if (this.isFinished) {
+      throw new Error("Trying to write in finished response.");
+    }
+
     this.applyCorsHeaders();
 
     this.res.writeHead(statusCode, headers);

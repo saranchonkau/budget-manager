@@ -7,8 +7,15 @@ interface DatabaseEnv {
   password: string;
 }
 
-class Environment {
+export interface Environment {
+  database: DatabaseEnv;
+  jwtSecret: string;
+  isInitialized: boolean;
+}
+
+class ProjectEnvironment implements Environment {
   public database: DatabaseEnv;
+  public jwtSecret: string;
   public isInitialized = false;
 
   constructor() {
@@ -17,6 +24,7 @@ class Environment {
       user: "",
       password: "",
     };
+    this.jwtSecret = "";
   }
 
   public init(options?: { debug: boolean }) {
@@ -41,9 +49,10 @@ class Environment {
       user: process.env.DATABASE_USER || "",
       password: process.env.DATABASE_PASSWORD || "",
     };
+    this.jwtSecret = process.env.JWT_SIGN_SECRET || "";
   }
 }
 
-const environment = new Environment();
+const environment = new ProjectEnvironment();
 
 export default environment;

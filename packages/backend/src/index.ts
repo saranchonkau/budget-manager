@@ -2,6 +2,7 @@ import { createServer } from "node:http";
 import * as pc from "picocolors";
 
 import { UserRouter } from "@/modules/user/user-router";
+import { AuthRouter } from "@/modules/auth/auth-router";
 import { RequestHandler } from "@/request-handler";
 
 import environment from "./environment";
@@ -17,6 +18,7 @@ router
       "Content-Length": "0",
     });
   })
+  .useModuleRouter(AuthRouter)
   .useModuleRouter(UserRouter);
 
 const requestHandler = new RequestHandler(router);

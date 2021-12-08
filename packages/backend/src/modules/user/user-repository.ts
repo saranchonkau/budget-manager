@@ -1,16 +1,16 @@
 import knex from "@/knex/knex-instance";
 
 import { User } from "./domain/user";
-import { UserRepositoryModel } from "./domain/user-repository-model";
 import { UserPersistence } from "./domain/user-persistence";
 import { userMapper } from "./domain/user-mapper";
+import { UserRepository } from "./domain/interfaces/user-repository";
 
-export class UserRepository implements UserRepositoryModel {
+export class UserRepositoryImpl implements UserRepository {
   private users() {
     return knex.table<UserPersistence>("user");
   }
 
-  getByEmail(email: string): Promise<User | null> {
+  getByEmail(email: User["email"]): Promise<User | null> {
     return this.users()
       .where("email", email)
       .then((result) => {
@@ -19,7 +19,16 @@ export class UserRepository implements UserRepositoryModel {
       });
   }
 
-  async exists(email: string): Promise<boolean> {
+  getById(id: User["id"]): Promise<User | null> {
+    return this.users()
+      .where("id", id)
+      .then((result) => {
+        const user = result[0] ?? null;
+        return user ? userMapper.toDomain(user) : null;
+      });
+  }
+
+  async exists(email: User["email"]): Promise<boolean> {
     const user = await this.getByEmail(email);
     return Boolean(user);
   }

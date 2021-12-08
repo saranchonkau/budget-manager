@@ -1,7 +1,6 @@
 import { Entity } from "@/shared/entity";
 import { Uuid } from "@/shared/uuid";
-import { EPOCH_TIMESTAMP } from "@/constants/common";
-import { getNowTimestamp } from "@/utils/get-now-timestamp";
+import { getEpochDate, getNowDate } from "@/utils/get-date";
 
 import { UserEmail } from "./user-email";
 import { UserPasswordHash } from "./user-password";
@@ -11,18 +10,18 @@ export interface IncomingUserProps {
   readonly email: UserEmail;
   readonly passwordHash: UserPasswordHash;
   readonly name: UserName;
-  readonly created_at?: string;
-  readonly updated_at?: string;
-  readonly deleted_at?: string;
+  readonly createdAt?: Date;
+  readonly updatedAt?: Date;
+  readonly deletedAt?: Date;
 }
 
 export interface UserProps {
   readonly email: UserEmail;
   readonly password_hash: UserPasswordHash;
   readonly name: UserName;
-  readonly created_at: string;
-  readonly updated_at: string;
-  readonly deleted_at: string;
+  readonly createdAt: Date;
+  readonly updatedAt: Date;
+  readonly deletedAt: Date;
 }
 
 export class User extends Entity<UserProps> {
@@ -46,29 +45,29 @@ export class User extends Entity<UserProps> {
     return this.props.password_hash;
   }
 
-  public get created_at(): string {
-    return this.props.created_at;
+  public get createdAt(): Date {
+    return this.props.createdAt;
   }
 
-  public get updated_at(): string {
-    return this.props.updated_at;
+  public get updatedAt(): Date {
+    return this.props.updatedAt;
   }
 
-  public get deleted_at(): string {
-    return this.props.deleted_at;
+  public get deletedAt(): Date {
+    return this.props.deletedAt;
   }
 
   public static create(props: IncomingUserProps, uuid: Uuid) {
-    const nowTimestamp = getNowTimestamp();
+    const nowDate = getNowDate();
 
     return new User(
       {
         email: props.email,
         name: props.name,
         password_hash: props.passwordHash,
-        created_at: props.created_at ?? nowTimestamp,
-        updated_at: props.updated_at ?? nowTimestamp,
-        deleted_at: props.deleted_at ?? EPOCH_TIMESTAMP,
+        createdAt: props.createdAt ?? nowDate,
+        updatedAt: props.updatedAt ?? nowDate,
+        deletedAt: props.deletedAt ?? getEpochDate(),
       },
       uuid
     );

@@ -3,4 +3,5 @@ export enum AppErrorBrand {
   RequestBodyDoesNotFitContract,
   ValidationError,
   UserAlreadyExistsError,
+  UserNotFoundError,
 }

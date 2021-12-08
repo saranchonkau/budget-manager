@@ -9,8 +9,9 @@ import { User } from "../../domain/user";
 import { divideLeftAndRight } from "@/utils/resolve-validation-errors";
 import { ValidationError } from "@/shared/validation-error";
 import { ZodError } from "zod";
-import { UserRepositoryModel } from "@/modules/user/domain/user-repository-model";
 import { InjectToken } from "@/constants/injection-tokens";
+import { UseCase } from "@/shared/use-case";
+import { UserRepository } from "@/modules/user/domain/interfaces/user-repository";
 
 export type CreateUserUseCaseResponse = Either<
   | ValidationError<{
@@ -22,8 +23,11 @@ export type CreateUserUseCaseResponse = Either<
   User
 >;
 
-export class CreateUserUseCase {
-  constructor(private readonly userRepository: UserRepositoryModel) {}
+export interface CreateUserUseCase
+  extends UseCase<CreateUserDTO, CreateUserUseCaseResponse> {}
+
+export class CreateUserUseCaseImpl implements CreateUserUseCase {
+  constructor(private readonly userRepository: UserRepository) {}
   public static inject = [InjectToken.UserRepository] as const;
 
   async execute(dto: CreateUserDTO): Promise<CreateUserUseCaseResponse> {

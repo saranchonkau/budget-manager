@@ -12,15 +12,14 @@ import { UserName } from "./user-name";
 
 class UserMapper implements Mapper<UserPersistence, User, UserDto> {
   toPersistence(user: User): UserPersistence {
-    console.log("user.password_hash.toString()", user.password_hash.toString());
     return {
       id: user.id,
       email: user.email,
       name: user.name,
       password_hash: user.password_hash.toString(),
-      created_at: user.created_at,
-      updated_at: user.updated_at,
-      deleted_at: user.deleted_at,
+      created_at: user.createdAt,
+      updated_at: user.updatedAt,
+      deleted_at: user.deletedAt,
     };
   }
   toDomain(user: UserPersistence) {
@@ -47,9 +46,9 @@ class UserMapper implements Mapper<UserPersistence, User, UserDto> {
         name: name,
         email: email,
         passwordHash: passwordHash,
-        created_at: user.created_at,
-        updated_at: user.updated_at,
-        deleted_at: user.deleted_at,
+        createdAt: user.created_at,
+        updatedAt: user.updated_at,
+        deletedAt: user.deleted_at,
       },
       id
     );
@@ -59,9 +58,9 @@ class UserMapper implements Mapper<UserPersistence, User, UserDto> {
       id: user.id,
       email: user.email,
       name: user.name,
-      created_at: user.created_at,
-      updated_at: user.updated_at,
-      deleted_at: user.deleted_at,
+      createdAt: user.createdAt.toISOString(),
+      updatedAt: user.updatedAt.toISOString(),
+      deletedAt: user.deletedAt.toISOString(),
     };
   }
 }

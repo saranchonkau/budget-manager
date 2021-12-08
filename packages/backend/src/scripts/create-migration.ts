@@ -1,8 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import pc from "picocolors";
-
-console.log("process.argv", process.argv);
+import { resolveRootFilePath } from "@/scripts/internal/paths";
 
 const migrationName = process.argv[2];
 
@@ -37,9 +36,7 @@ function getDirectoryName() {
 
 function createDir() {
   const dirName = getDirectoryName();
-  const dirPath = path.resolve(__dirname, "../db/migrations", dirName);
-  fs.mkdirSync(dirPath);
-  return dirPath;
+  return resolveRootFilePath("./db/migrations", dirName);
 }
 
 const directoryPath = createDir();
