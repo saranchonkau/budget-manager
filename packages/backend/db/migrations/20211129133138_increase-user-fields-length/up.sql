@@ -1,3 +1,3 @@
-ALTER TABLE "user"
-    ALTER COLUMN email TYPE character varying(60),
-    ALTER COLUMN password_hash TYPE character(145);
+alter table "user"
+    alter column email type varchar(60),
+    alter column password_hash type char(145);

@@ -1,12 +1,12 @@
-CREATE TABLE "user"
+create table "user"
 (
-    id uuid NOT NULL,
-    email character varying(30) NOT NULL,
-    password_hash character(60) NOT NULL,
-    name character varying(30) NOT NULL,
-    created_at timestamp with time zone NOT NULL,
-    updated_at timestamp with time zone NOT NULL,
-    deleted_at timestamp with time zone NOT NULL,
-    CONSTRAINT user_pkey PRIMARY KEY (id),
-    CONSTRAINT user_email_key UNIQUE (email)
+    id            uuid                     not null,
+    email         varchar(30)              not null,
+    password_hash char(60)                 not null,
+    name          varchar(30)              not null,
+    created_at    timestamp with time zone not null,
+    updated_at    timestamp with time zone not null,
+    deleted_at    timestamp with time zone not null,
+    constraint user_pkey primary key (id),
+    constraint user_email_key unique (email)
 );
