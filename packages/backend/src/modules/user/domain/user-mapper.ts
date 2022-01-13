@@ -16,7 +16,7 @@ class UserMapper implements Mapper<UserPersistence, User, UserDto> {
       id: user.id,
       email: user.email,
       name: user.name,
-      password_hash: user.password_hash.toString(),
+      password_hash: user.passwordHash.toString(),
       created_at: user.createdAt,
       updated_at: user.updatedAt,
       deleted_at: user.deletedAt,

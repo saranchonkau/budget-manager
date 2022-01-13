@@ -1,6 +1,6 @@
 import { QueryParams } from "./common";
 
-export type BodyParam = { [key: string]: unknown };
+export type BodyParam = { [key: string]: any };
 
 export type JsonParseResult =
   | { [key: string]: any }

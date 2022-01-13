@@ -41,7 +41,7 @@ export class User extends Entity<UserProps> {
     return this.props.name.value;
   }
 
-  public get password_hash() {
+  public get passwordHash() {
     return this.props.password_hash;
   }
 

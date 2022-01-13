@@ -1,78 +1,20 @@
-import { FormEvent, useState } from "react";
-import clsx from "clsx";
-import classes from "./App.module.css";
-import { request } from "./services/request";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Layout from "@/components/Layout/Layout";
+import SignUpPage from "@/modules/auth/sign-up/SignUpPage";
 
 function App() {
-  const [count, setCount] = useState(0);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  function handleSubmit(event: FormEvent) {
-    event.preventDefault();
-
-    request
-      .post({ path: "/auth/signup", body: { name, email, password } })
-      .then((response) => {
-        console.log("response: ", response);
-      });
-  }
-
   return (
-    <div className={classes.container}>
-      <form className={classes.form} onSubmit={handleSubmit}>
-        <h1 className={clsx(classes.title, "display-4", "fw-normal")}>
-          Sign up
-        </h1>
-
-        <div className="mb-3">
-          <label htmlFor="name" className="form-label">
-            Name
-          </label>
-          <input
-            type="text"
-            className="form-control"
-            id="name"
-            placeholder="John Doe"
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-          />
-        </div>
-
-        <div className="mb-3">
-          <label htmlFor="email" className="form-label">
-            Email
-          </label>
-          <input
-            type="email"
-            className="form-control"
-            id="email"
-            placeholder="john.doe@gmail.com"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-          />
-        </div>
-
-        <div className="mb-4">
-          <label htmlFor="email" className="form-label">
-            Password
-          </label>
-          <input
-            type="password"
-            className="form-control"
-            id="password"
-            placeholder="Password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-          />
-        </div>
-
-        <button type="submit" className="w-100 btn btn-lg btn-primary">
-          Submit
-        </button>
-      </form>
-    </div>
+    <Layout>
+      <SignUpPage />
+    </Layout>
+    // <BrowserRouter>
+    //   <Routes>
+    //     <Route path="/" element={<Layout />}>
+    //       <Route index element={<h1>hey</h1>} />
+    //       <Route path="auth" element={} />
+    //     </Route>
+    //   </Routes>
+    // </BrowserRouter>
   );
 }
 

@@ -1,6 +1,6 @@
 import * as z from "zod";
-import { ValueObject } from "../../../shared/value-object";
-import { parseWithContract } from "../../../shared/parse-with-contract";
+import { ValueObject } from "@/shared/value-object";
+import { parseWithContract } from "@/shared/parse-with-contract";
 
 type UserNameType = string & { readonly _brand_: unique symbol };
 
