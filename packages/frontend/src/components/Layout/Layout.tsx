@@ -1,14 +1,13 @@
 import React from "react";
+import { Outlet } from "react-router-dom";
 import classes from "./Layout.module.css";
 
-interface Props {
-  children?: React.ReactNode;
-}
-
-function Layout(props: Props) {
+function Layout() {
   return (
     <div className={classes.layout}>
-      <main className={classes.main}>{props.children}</main>
+      <main className={classes.main}>
+        <Outlet />
+      </main>
     </div>
   );
 }

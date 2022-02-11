@@ -10,6 +10,7 @@ function SignUpPage() {
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
+    signUp({ name, email, password });
   }
 
   return (

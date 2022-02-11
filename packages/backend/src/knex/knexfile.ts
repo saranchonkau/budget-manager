@@ -18,7 +18,7 @@ const migrationsConfig: Knex.MigratorConfig = {
 const knexConfig: KnexConfig = {
   client: "pg",
   connection: {
-    host: "127.0.0.1",
+    host: "budget-manager-postgres",
     port: 5432,
     user: environment.database.user,
     password: environment.database.password,

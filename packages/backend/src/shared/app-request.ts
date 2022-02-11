@@ -115,7 +115,7 @@ export class AppRequest {
   }
 
   private applyCorsHeaders() {
-    this.res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+    this.res.setHeader("Access-Control-Allow-Origin", "*");
     this.res.setHeader("Access-Control-Allow-Credentials", "true");
     this.res.setHeader(
       "Access-Control-Allow-Methods",

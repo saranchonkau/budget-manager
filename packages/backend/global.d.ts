@@ -11,5 +11,6 @@ declare namespace NodeJS {
     readonly DATABASE_USER: string | undefined;
     readonly DATABASE_PASSWORD: string | undefined;
     readonly JWT_SIGN_SECRET: string | undefined;
+    readonly PORT: string | undefined;
   }
 }

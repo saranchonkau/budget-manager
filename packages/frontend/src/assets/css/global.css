@@ -10,19 +10,16 @@
   box-sizing: border-box;
 }
 
-svg {
-  /** Fix large viewBox and translates in IE */
-  overflow: hidden;
-}
-
-#__next {
-  display: flex;
-}
-
 html,
 body {
   width: 100%;
   min-width: 320px;
+}
+
+html,
+body,
+#root {
+  height: 100%;
 }
 
 input,
@@ -86,7 +83,7 @@ body {
     "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   font-size: 14px;
-  color: #fff;
+  color: var(--bs-body-color);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

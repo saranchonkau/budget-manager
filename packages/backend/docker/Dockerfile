@@ -1,0 +1,27 @@
+FROM node:16-alpine
+
+WORKDIR /var/www/app
+
+COPY ./packages/backend/package.json ./
+COPY ./yarn.lock ./
+
+RUN yarn install --frozen-lockfile
+
+COPY ./packages/backend ./
+
+ARG DATABASE_PASSWORD=$DATABASE_PASSWORD
+ARG DATABASE_USER=$DATABASE_USER
+ARG DATABASE_NAME=$DATABASE_NAME
+ARG JWT_SIGN_SECRET=$JWT_SIGN_SECRET
+ARG PORT=$PORT
+
+RUN DATABASE_PASSWORD=$DATABASE_PASSWORD \
+    DATABASE_USER=$DATABASE_USER \
+    DATABASE_NAME=$DATABASE_NAME \
+    JWT_SIGN_SECRET=$JWT_SIGN_SECRET \
+    PORT=$PORT \
+    yarn build
+
+EXPOSE $PORT
+
+CMD ["yarn", "prod"]

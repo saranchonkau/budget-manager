@@ -24,8 +24,8 @@ router
 const requestHandler = new RequestHandler(router);
 const server = createServer((req, res) => requestHandler.handle(req, res));
 
-server.listen(8080, () => {
-  console.log("Server listen port: 8080");
+server.listen(environment.port, () => {
+  console.log("Server listen port: ", environment.port);
 });
 
 function handleSignal() {

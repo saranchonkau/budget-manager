@@ -4,17 +4,14 @@ import SignUpPage from "@/modules/auth/sign-up/SignUpPage";
 
 function App() {
   return (
-    <Layout>
-      <SignUpPage />
-    </Layout>
-    // <BrowserRouter>
-    //   <Routes>
-    //     <Route path="/" element={<Layout />}>
-    //       <Route index element={<h1>hey</h1>} />
-    //       <Route path="auth" element={} />
-    //     </Route>
-    //   </Routes>
-    // </BrowserRouter>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<h1>Hey, this is budget-manager app :)</h1>} />
+          <Route path="auth" element={<SignUpPage />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 

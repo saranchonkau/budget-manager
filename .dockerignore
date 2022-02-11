@@ -1,0 +1,10 @@
+node_modules
+dist
+packages/frontend/node_modules
+packages/frontend/dist
+packages/frontend/.env.local
+packages/backend/node_modules
+packages/backend/.tmp
+packages/backend/dist
+packages/backend/db/data
+.env.local

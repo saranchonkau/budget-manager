@@ -3,10 +3,10 @@ import {
   HttpMethod,
   HttpRequestFunction,
   RequestOptions,
-} from "../typings/request";
-import type { Nullable, QueryParams } from "../typings/common";
-import { isNotNullish } from "../utils/common";
-import { convertParamsToString } from "../utils/convert-params-to-string";
+} from "@/typings/request";
+import type { Nullable, QueryParams } from "@/typings/common";
+import { isNotNullish } from "@/utils/common";
+import { convertParamsToString } from "@/utils/convert-params-to-string";
 import { RequestError } from "./request-error";
 
 export const ACCESS_TOKEN_KEY = "access-token";

@@ -1,6 +1,6 @@
 .container {
   height: 100%;
-  display: flex;
+  display: grid;
   align-items: center;
   justify-content: center;
   background-color: var(--color-blue-100);
@@ -10,10 +10,9 @@
   width: 500px;
   border-radius: 6px;
   background-color: white;
-  padding: 30px 30px;
+  padding: 30px;
 }
 
 .title {
-  color: #333;
   text-align: center;
 }

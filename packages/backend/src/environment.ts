@@ -10,12 +10,14 @@ interface DatabaseEnv {
 export interface Environment {
   database: DatabaseEnv;
   jwtSecret: string;
+  port: number;
   isInitialized: boolean;
 }
 
 class ProjectEnvironment implements Environment {
   public database: DatabaseEnv;
   public jwtSecret: string;
+  public port: number;
   public isInitialized = false;
 
   constructor() {
@@ -25,6 +27,7 @@ class ProjectEnvironment implements Environment {
       password: "",
     };
     this.jwtSecret = "";
+    this.port = 9000;
   }
 
   public init(options?: { debug: boolean }) {
@@ -50,6 +53,9 @@ class ProjectEnvironment implements Environment {
       password: process.env.DATABASE_PASSWORD || "",
     };
     this.jwtSecret = process.env.JWT_SIGN_SECRET || "";
+    console.log("process.env.PORT", process.env.PORT);
+    this.port = Number.parseInt(process.env.PORT || "", 10) || 9000;
+    console.log("port", this.port);
   }
 }
 
