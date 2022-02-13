@@ -1,0 +1,37 @@
+services:
+  frontend:
+    image: budget-manager-frontend-image
+    ports:
+      - "$FRONTEND_PORT:80"
+    networks:
+      - budget-manager-network
+
+  backend:
+    image: budget-manager-backend-image
+    environment:
+      DATABASE_USER: $DATABASE_USER
+      DATABASE_PASSWORD: $DATABASE_PASSWORD
+      DATABASE_NAME: $DATABASE_NAME
+      JWT_SIGN_SECRET: $JWT_SIGN_SECRET
+    expose:
+      - $BACKEND_PORT
+    networks:
+      - budget-manager-network
+
+  db:
+    image: postgres:14-alpine
+    environment:
+      POSTGRES_USER: $DATABASE_USER
+      POSTGRES_PASSWORD: $DATABASE_PASSWORD
+      POSTGRES_DB: $DATABASE_NAME
+    volumes:
+      - $DATABASE_DATA_DIRECTORY:/var/lib/postgresql/data
+    ports:
+      - "$DATABASE_PORT:5432"
+    networks:
+      - budget-manager-network
+
+networks:
+  budget-manager-network:
+    driver: bridge
+

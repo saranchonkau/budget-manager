@@ -1,0 +1,26 @@
+GET {{origin}}/auth/profile
+Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiI4Nzg3ZjBiYi1jYzg3LTQ1ZDktYjc5OC05NDAzNGQ3MDcxYzgifQ.9WWNJX6W0ZCM-5aWUefp43ZJibZkylRLqIS6Kkt4l4M
+
+###
+POST {{origin}}/auth/signup
+Content-Type: application/json
+
+{
+  "name": "Ivan",
+  "email": "saranchonkau@gmail.com",
+  "password": "123456"
+}
+
+###
+POST {{origin}}/auth/signup
+Content-Type: application/json
+
+{
+  "name": "Pavel",
+  "email": "pavel@gmail.com",
+  "password": "12345"
+}
+
+
+###
